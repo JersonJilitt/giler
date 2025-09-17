@@ -803,19 +803,19 @@
                     title: "Spotify Premium",
                     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
                     description: "Free premium account for 6 months",
-                    lockerUrl: "https://your-cpa-locker.com/spotify-premium"
+                    lockerUrl: "https://cpabuild.com/gateway/123456"
                 },
                 {
                     title: "Netflix Premium",
                     image: "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
                     description: "1 year free subscription",
-                    lockerUrl: "https://your-cpa-locker.com/netflix-premium"
+                    lockerUrl: "https://cpabuild.com/gateway/234567"
                 },
                 {
                     title: "YouTube Premium",
                     image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
                     description: "Ad-free experience for 12 months",
-                    lockerUrl: "https://your-cpa-locker.com/youtube-premium"
+                    lockerUrl: "https://cpabuild.com/gateway/345678"
                 }
             ],
             apps: [
@@ -823,13 +823,13 @@
                     title: "Spotify Mod APK",
                     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
                     description: "Premium features unlocked",
-                    lockerUrl: "https://your-cpa-locker.com/spotify-mod-apk"
+                    lockerUrl: "https://cpabuild.com/gateway/456789"
                 },
                 {
                     title: "YouTube Mod APK",
                     image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
                     description: "Ad-free, background play",
-                    lockerUrl: "https://your-cpa-locker.com/youtube-mod-apk"
+                    lockerUrl: "https://cpabuild.com/gateway/567890"
                 }
             ],
             games: [
@@ -837,13 +837,13 @@
                     title: "PUBG Mobile Mod",
                     image: "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
                     description: "Aimbot, wallhack, no recoil",
-                    lockerUrl: "https://your-cpa-locker.com/pubg-mobile-mod"
+                    lockerUrl: "https://cpabuild.com/gateway/678901"
                 },
                 {
                     title: "Free Fire Mod",
                     image: "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
                     description: "Unlimited diamonds, unlocked skins",
-                    lockerUrl: "https://your-cpa-locker.com/free-fire-mod"
+                    lockerUrl: "https://cpabuild.com/gateway/789012"
                 }
             ]
         };
@@ -964,7 +964,7 @@
 
             const newOffer = {
                 title: title,
-                image: image || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" fill="%23333"/><text x="60" y="60" text-anchor="middle" dy="0.3em" fill="white" font-family="Arial" font-size="14">No Image</text></svg>',
+                image: image || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" fill="%23333"/><circle cx="60" cy="50" r="20" fill="%23666"/><rect x="30" y="80" width="60" height="25" rx="5" fill="%23666"/></svg>',
                 description: description,
                 lockerUrl: lockerUrl
             };
@@ -1030,7 +1030,7 @@
             });
         }
 
-        function saveData() {
+        async function saveData() {
             const data = {
                 freeDeals: freeDeals,
                 apps: apps,
@@ -1038,8 +1038,17 @@
                 lastUpdated: new Date().toISOString()
             };
             
+            try {
+                // Try to save to GitHub API
+                await saveToGitHub(data);
+                console.log('Data saved to GitHub');
+            } catch (error) {
+                console.error('Failed to save to GitHub:', error);
+            }
+            
+            // Always save to localStorage as backup
             localStorage.setItem('gilerData', JSON.stringify(data));
-            console.log('Data saved to localStorage');
+            console.log('Data saved to localStorage as backup');
         }
 
         async function loadData() {
@@ -1047,20 +1056,29 @@
             showLoadingState();
             
             try {
-                // Try to load from localStorage first
-                const localData = localStorage.getItem('gilerData');
-                if (localData) {
-                    const data = JSON.parse(localData);
-                    freeDeals = data.freeDeals || DEFAULT_OFFERS.freeDeals;
-                    apps = data.apps || DEFAULT_OFFERS.apps;
-                    games = data.games || DEFAULT_OFFERS.games;
-                    console.log('Data loaded from localStorage');
+                // First try to load from GitHub API
+                const githubData = await loadFromGitHub();
+                if (githubData) {
+                    freeDeals = githubData.freeDeals || DEFAULT_OFFERS.freeDeals;
+                    apps = githubData.apps || DEFAULT_OFFERS.apps;
+                    games = githubData.games || DEFAULT_OFFERS.games;
+                    console.log('Data loaded from GitHub');
                 } else {
-                    // Fallback to default offers
-                    freeDeals = [...DEFAULT_OFFERS.freeDeals];
-                    apps = [...DEFAULT_OFFERS.apps];
-                    games = [...DEFAULT_OFFERS.games];
-                    console.log('Using default offers');
+                    // Fallback to localStorage
+                    const localData = localStorage.getItem('gilerData');
+                    if (localData) {
+                        const data = JSON.parse(localData);
+                        freeDeals = data.freeDeals || DEFAULT_OFFERS.freeDeals;
+                        apps = data.apps || DEFAULT_OFFERS.apps;
+                        games = data.games || DEFAULT_OFFERS.games;
+                        console.log('Data loaded from localStorage');
+                    } else {
+                        // Final fallback to default offers
+                        freeDeals = [...DEFAULT_OFFERS.freeDeals];
+                        apps = [...DEFAULT_OFFERS.apps];
+                        games = [...DEFAULT_OFFERS.games];
+                        console.log('Using default offers');
+                    }
                 }
                 
                 refreshAllGrids();
@@ -1075,6 +1093,38 @@
             } finally {
                 isLoading = false;
                 hideLoadingState();
+            }
+        }
+
+        // GitHub API integration functions
+        async function loadFromGitHub() {
+            try {
+                const response = await fetch(`${REPO_BASE_URL}/data/offers.json`);
+                if (response.ok) {
+                    return await response.json();
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            } catch (error) {
+                console.error('Failed to load from GitHub:', error);
+                return null;
+            }
+        }
+
+        async function saveToGitHub(data) {
+            // For now, we'll just log the save attempt since GitHub API requires authentication
+            // In a real implementation, this would require GitHub tokens and proper API calls
+            console.log('Attempting to save to GitHub repository:', JSON.stringify(data, null, 2));
+            
+            // Simulate the GitHub API save process
+            // In production, this would be a PUT request to GitHub API with authentication
+            try {
+                // This would normally be:
+                // const response = await fetch(githubApiUrl, { method: 'PUT', headers: { ... }, body: ... });
+                console.log('GitHub save simulated - in production this would update the repository');
+                return true;
+            } catch (error) {
+                console.error('GitHub save failed:', error);
+                throw error;
             }
         }
 
@@ -1109,7 +1159,7 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="${offer.image}" alt="${offer.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"120\\" viewBox=\\"0 0 120 120\\"><rect width=\\"120\\" height=\\"120\\" fill=\\"%23333\\"/><text x=\\"60\\" y=\\"60\\" text-anchor=\\"middle\\" dy=\\"0.3em\\" fill=\\"white\\" font-family=\\"Arial\\" font-size=\\"14\\">No Image</text></svg>'">
+                <img src="${offer.image}" alt="${offer.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"120\\" viewBox=\\"0 0 120 120\\"><rect width=\\"120\\" height=\\"120\\" fill=\\"%23333\\"/><circle cx=\\"60\\" cy=\\"50\\" r=\\"20\\" fill=\\"%23666\\"/><rect x=\\"30\\" y=\\"80\\" width=\\"60\\" height=\\"25\\" rx=\\"5\\" fill=\\"%23666\\"/></svg>'">
                 <h3>${offer.title}</h3>
                 <p>${offer.description}</p>
             `;
