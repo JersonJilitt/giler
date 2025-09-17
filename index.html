@@ -58,6 +58,7 @@
             gap: 10px;
             cursor: pointer;
             user-select: none;
+            transition: transform 0.1s ease;
         }
         .logo img { height: 40px; }
         .logo-text {
@@ -390,6 +391,72 @@
             cursor: pointer;
             font-weight: bold;
         }
+        
+        /* Admin Authentication Modal */
+        .admin-auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .auth-modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .auth-modal-content h3 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .auth-form input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-color);
+            background: var(--background-color);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .auth-buttons button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            min-width: 80px;
+        }
+        .auth-buttons button:first-child {
+            background: var(--primary-color);
+            color: white;
+        }
+        .auth-buttons button:last-child {
+            background: var(--secondary-color);
+            color: white;
+        }
+        .auth-buttons button:hover {
+            opacity: 0.8;
+        }
         .offer-list {
             max-height: 300px;
             overflow-y: auto;
@@ -548,8 +615,23 @@
     </style>
 </head>
 <body>
-    <!-- Admin Panel Toggle (Only visible to you) -->
-    <button class="admin-toggle" id="admin-toggle" onclick="toggleAdmin()" title="Admin Panel">⚙️</button>
+    <!-- Admin Panel Toggle (Hidden) -->
+    <!-- <button class="admin-toggle" id="admin-toggle" onclick="toggleAdmin()" title="Admin Panel">⚙️</button> -->
+    
+    <!-- Admin Authentication Modal -->
+    <div id="admin-auth-modal" class="admin-auth-modal" style="display: none;">
+        <div class="auth-modal-content">
+            <h3>Only for Admins</h3>
+            <div class="auth-form">
+                <input type="text" id="admin-username" placeholder="Username" required>
+                <input type="password" id="admin-password" placeholder="Password" required>
+                <div class="auth-buttons">
+                    <button onclick="authenticateAdmin()">Login</button>
+                    <button onclick="closeAuthModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Admin Panel -->
     <div class="admin-panel" id="admin-panel">
@@ -692,12 +774,18 @@
     </footer>
 
     <script>
-        // Admin Panel - Only you can access this
-        const ADMIN_USERNAME = 'JersonJilitthow'; // Your GitHub username
-        const isCurrentUserAdmin = true; // Set to true for yourself
+        // Admin Panel - Hidden access system
+        const ADMIN_USERNAME = 'admin'; // Admin username
+        const ADMIN_PASSWORD = 'giler2025'; // Admin password
+        window.isCurrentUserAdmin = false; // Admin must authenticate first
+        window.logoClickCount = 0;
+        window.logoClickTimer = null;
+        const LOGO_CLICK_TIMEOUT = 3000; // 3 seconds timeout for clicks
         
-        if (!isCurrentUserAdmin) {
-            document.getElementById('admin-toggle').style.display = 'none';
+        // Hide admin toggle completely since we use hidden access
+        const adminToggle = document.getElementById('admin-toggle');
+        if (adminToggle) {
+            adminToggle.style.display = 'none';
         }
 
         // Data storage with localStorage
@@ -765,9 +853,66 @@
             }
         ];
 
+        // Admin authentication functions
+        function showAuthModal() {
+            document.getElementById('admin-auth-modal').style.display = 'flex';
+            document.getElementById('admin-username').focus();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('admin-auth-modal').style.display = 'none';
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function authenticateAdmin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                window.isCurrentUserAdmin = true;
+                closeAuthModal();
+                toggleAdmin(); // Show the admin panel
+                alert('Admin access granted!');
+            } else {
+                alert('Invalid credentials!');
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+            }
+        }
+
+        // Logo click counter for hidden admin access
+        function handleLogoClick() {
+            window.logoClickCount++;
+            
+            // Clear existing timer
+            if (window.logoClickTimer) {
+                clearTimeout(window.logoClickTimer);
+            }
+            
+            // Add visual feedback (optional)
+            const logo = document.getElementById('logo-click');
+            logo.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                logo.style.transform = 'scale(1)';
+            }, 100);
+            
+            if (window.logoClickCount >= 5) {
+                // Reset counter and show auth modal
+                window.logoClickCount = 0;
+                showAuthModal();
+                return;
+            }
+            
+            // Reset counter after timeout
+            window.logoClickTimer = setTimeout(() => {
+                window.logoClickCount = 0;
+            }, LOGO_CLICK_TIMEOUT);
+        }
+
         // Admin functions
         function toggleAdmin() {
-            if (!isCurrentUserAdmin) return;
+            if (!window.isCurrentUserAdmin) return;
             const panel = document.getElementById('admin-panel');
             panel.classList.toggle('show');
             if (panel.classList.contains('show')) {
@@ -776,7 +921,7 @@
         }
 
         function addOffer() {
-            if (!isCurrentUserAdmin) return;
+            if (!window.isCurrentUserAdmin) return;
             
             const category = document.getElementById('category-select').value;
             const title = document.getElementById('offer-title').value;
@@ -903,8 +1048,12 @@
         const navLinks = document.querySelectorAll('.nav-link');
         const logo = document.getElementById('logo-click');
 
-        // Logo click = scroll to home
+        // Logo click = hidden admin access or scroll to home
         logo.addEventListener('click', () => {
+            // Handle hidden admin access
+            handleLogoClick();
+            
+            // Original functionality - scroll to home
             document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
             navLinks.forEach(l => l.classList.remove('active'));
             navLinks[0].classList.add('active');
@@ -959,7 +1108,12 @@
                     <p>${item.description}</p>
                 `;
                 card.addEventListener('click', () => {
-                    selectOffer(item, card);
+                    // If offer has a locker URL, open it in new tab immediately
+                    if (item.lockerUrl) {
+                        window.open(item.lockerUrl, '_blank');
+                    } else {
+                        selectOffer(item, card);
+                    }
                 });
                 gridElement.appendChild(card);
             });
@@ -1025,6 +1179,18 @@
                 window.open(currentLockerUrl, "_blank");
             } else {
                 alert("Please select an offer first!");
+            }
+        });
+
+        // Add keyboard support for authentication modal
+        document.addEventListener('keydown', function(e) {
+            const authModal = document.getElementById('admin-auth-modal');
+            if (authModal && authModal.style.display === 'flex') {
+                if (e.key === 'Enter') {
+                    authenticateAdmin();
+                } else if (e.key === 'Escape') {
+                    closeAuthModal();
+                }
             }
         });
     </script>
