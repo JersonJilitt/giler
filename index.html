@@ -592,6 +592,31 @@
             background: #ff4444;
             color: white;
         }
+        
+        /* Loading Spinner Styles */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
+        .loading-spinner::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 2px solid var(--accent-color);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -760,57 +785,73 @@
         const ADMIN_PASSWORD = "giler2024";
         let isAdminAuthenticated = false;
 
-        // Data storage with localStorage support
-        let freeDeals = JSON.parse(localStorage.getItem('giler_freeDeals')) || [
-            {
-                title: "Spotify Premium",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
-                description: "Free premium account for 6 months",
-                lockerUrl: "https://your-cpa-locker.com/spotify-premium"
-            },
-            {
-                title: "Netflix Premium",
-                image: "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
-                description: "1 year free subscription",
-                lockerUrl: "https://your-cpa-locker.com/netflix-premium"
-            },
-            {
-                title: "YouTube Premium",
-                image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
-                description: "Ad-free experience for 12 months",
-                lockerUrl: "https://your-cpa-locker.com/youtube-premium"
-            }
-        ];
+        // GitHub API configuration
+        const GITHUB_CONFIG = {
+            owner: 'JersonJilitt',
+            repo: 'giler',
+            branch: 'main',
+            path: 'data/offers.json',
+            // Note: For a real implementation, you would need to use GitHub Apps or personal access tokens
+            // This is a simplified version that works with public repositories
+        };
 
-        let apps = JSON.parse(localStorage.getItem('giler_apps')) || [
-            {
-                title: "Spotify Mod APK",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
-                description: "Premium features unlocked",
-                lockerUrl: "https://your-cpa-locker.com/spotify-mod-apk"
-            },
-            {
-                title: "YouTube Mod APK",
-                image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
-                description: "Ad-free, background play",
-                lockerUrl: "https://your-cpa-locker.com/youtube-mod-apk"
-            }
-        ];
+        // Default fallback data
+        const DEFAULT_OFFERS = {
+            freeDeals: [
+                {
+                    title: "Spotify Premium",
+                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+                    description: "Free premium account for 6 months",
+                    lockerUrl: "https://your-cpa-locker.com/spotify-premium"
+                },
+                {
+                    title: "Netflix Premium",
+                    image: "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
+                    description: "1 year free subscription",
+                    lockerUrl: "https://your-cpa-locker.com/netflix-premium"
+                },
+                {
+                    title: "YouTube Premium",
+                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+                    description: "Ad-free experience for 12 months",
+                    lockerUrl: "https://your-cpa-locker.com/youtube-premium"
+                }
+            ],
+            apps: [
+                {
+                    title: "Spotify Mod APK",
+                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+                    description: "Premium features unlocked",
+                    lockerUrl: "https://your-cpa-locker.com/spotify-mod-apk"
+                },
+                {
+                    title: "YouTube Mod APK",
+                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+                    description: "Ad-free, background play",
+                    lockerUrl: "https://your-cpa-locker.com/youtube-mod-apk"
+                }
+            ],
+            games: [
+                {
+                    title: "PUBG Mobile Mod",
+                    image: "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
+                    description: "Aimbot, wallhack, no recoil",
+                    lockerUrl: "https://your-cpa-locker.com/pubg-mobile-mod"
+                },
+                {
+                    title: "Free Fire Mod",
+                    image: "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
+                    description: "Unlimited diamonds, unlocked skins",
+                    lockerUrl: "https://your-cpa-locker.com/free-fire-mod"
+                }
+            ]
+        };
 
-        let games = JSON.parse(localStorage.getItem('giler_games')) || [
-            {
-                title: "PUBG Mobile Mod",
-                image: "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
-                description: "Aimbot, wallhack, no recoil",
-                lockerUrl: "https://your-cpa-locker.com/pubg-mobile-mod"
-            },
-            {
-                title: "Free Fire Mod",
-                image: "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
-                description: "Unlimited diamonds, unlocked skins",
-                lockerUrl: "https://your-cpa-locker.com/free-fire-mod"
-            }
-        ];
+        // Data storage - will be loaded from GitHub API
+        let freeDeals = [];
+        let apps = [];
+        let games = [];
+        let isLoading = false;
 
         // DOM elements
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -981,20 +1022,115 @@
             });
         }
 
+        // GitHub API Functions
+        async function loadOffersFromGitHub() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            showLoadingState(true);
+            
+            try {
+                // First try to load from our hosted offers.json file
+                const response = await fetch('./data/offers.json');
+                
+                if (response.ok) {
+                    const offersData = await response.json();
+                    freeDeals = offersData.freeDeals || DEFAULT_OFFERS.freeDeals;
+                    apps = offersData.apps || DEFAULT_OFFERS.apps;
+                    games = offersData.games || DEFAULT_OFFERS.games;
+                    
+                    console.log('✅ Offers loaded from GitHub repository');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.warn('⚠️ Failed to load from GitHub repository:', error.message);
+                console.log('📄 Using default offers as fallback');
+                
+                // Fallback to default offers
+                freeDeals = DEFAULT_OFFERS.freeDeals;
+                apps = DEFAULT_OFFERS.apps;
+                games = DEFAULT_OFFERS.games;
+                
+                return false;
+            } finally {
+                isLoading = false;
+                showLoadingState(false);
+                refreshAllGrids();
+            }
+        }
+
+        function showLoadingState(show) {
+            // Add loading indicators to the grids
+            const grids = [freeDealsGrid, appsGrid, gamesGrid];
+            grids.forEach(grid => {
+                if (!grid) return;
+                
+                if (show) {
+                    grid.innerHTML = '<div class="loading-spinner">Loading offers...</div>';
+                } else {
+                    // Will be populated by refreshAllGrids()
+                }
+            });
+        }
+
+        // Note: For a production implementation, saving to GitHub would require:
+        // 1. GitHub App authentication or Personal Access Token
+        // 2. Proper CORS handling
+        // 3. Server-side endpoint to handle the GitHub API calls
+        // For now, we'll provide a simulated save function
+        async function saveOffersToGitHub() {
+            if (!isAdminAuthenticated) {
+                alert('❌ Admin authentication required to save data');
+                return false;
+            }
+
+            try {
+                showLoadingState(true);
+                
+                // In a real implementation, this would make an authenticated request to GitHub API
+                // For now, we'll simulate the save and provide instructions
+                const offersData = {
+                    freeDeals: freeDeals,
+                    apps: apps,
+                    games: games
+                };
+
+                console.log('📊 Offers data to be saved:', offersData);
+                
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // For the demo, we'll save to localStorage as backup
+                localStorage.setItem('giler_backup', JSON.stringify(offersData));
+                
+                alert('✅ Offers saved successfully!\n\n📝 Note: In a production environment, this would update the GitHub repository directly. For now, data is backed up locally.');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Error saving offers:', error);
+                alert('❌ Failed to save offers. Please try again.');
+                return false;
+            } finally {
+                showLoadingState(false);
+            }
+        }
+
         function saveData() {
-            localStorage.setItem('giler_freeDeals', JSON.stringify(freeDeals));
-            localStorage.setItem('giler_apps', JSON.stringify(apps));
-            localStorage.setItem('giler_games', JSON.stringify(games));
-            alert('Data saved successfully!');
+            saveOffersToGitHub();
         }
 
         function loadData() {
-            freeDeals = JSON.parse(localStorage.getItem('giler_freeDeals')) || freeDeals;
-            apps = JSON.parse(localStorage.getItem('giler_apps')) || apps;
-            games = JSON.parse(localStorage.getItem('giler_games')) || games;
-            refreshAllGrids();
-            updateOfferList();
-            alert('Data loaded successfully!');
+            loadOffersFromGitHub().then(success => {
+                if (success) {
+                    updateOfferList();
+                    alert('✅ Data loaded successfully from GitHub repository!');
+                } else {
+                    updateOfferList();
+                    alert('⚠️ Loaded default offers (GitHub repository unavailable)');
+                }
+            });
         }
 
         function refreshAllGrids() {
@@ -1049,7 +1185,11 @@
         });
 
         // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load offers from GitHub repository first
+            await loadOffersFromGitHub();
+            
+            // Then populate the cards with loaded data
             populateCards(freeDeals, freeDealsGrid);
             populateCards(apps, appsGrid);
             populateCards(games, gamesGrid);

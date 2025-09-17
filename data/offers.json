@@ -1,0 +1,50 @@
+{
+  "freeDeals": [
+    {
+      "title": "Spotify Premium",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+      "description": "Free premium account for 6 months",
+      "lockerUrl": "https://your-cpa-locker.com/spotify-premium"
+    },
+    {
+      "title": "Netflix Premium",
+      "image": "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
+      "description": "1 year free subscription",
+      "lockerUrl": "https://your-cpa-locker.com/netflix-premium"
+    },
+    {
+      "title": "YouTube Premium",
+      "image": "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+      "description": "Ad-free experience for 12 months",
+      "lockerUrl": "https://your-cpa-locker.com/youtube-premium"
+    }
+  ],
+  "apps": [
+    {
+      "title": "Spotify Mod APK",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+      "description": "Premium features unlocked",
+      "lockerUrl": "https://your-cpa-locker.com/spotify-mod-apk"
+    },
+    {
+      "title": "YouTube Mod APK",
+      "image": "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+      "description": "Ad-free, background play",
+      "lockerUrl": "https://your-cpa-locker.com/youtube-mod-apk"
+    }
+  ],
+  "games": [
+    {
+      "title": "PUBG Mobile Mod",
+      "image": "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
+      "description": "Aimbot, wallhack, no recoil",
+      "lockerUrl": "https://your-cpa-locker.com/pubg-mobile-mod"
+    },
+    {
+      "title": "Free Fire Mod",
+      "image": "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
+      "description": "Unlimited diamonds, unlocked skins",
+      "lockerUrl": "https://your-cpa-locker.com/free-fire-mod"
+    }
+  ]
+}
