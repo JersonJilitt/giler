@@ -468,20 +468,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         .admin-panel.active { display: block; }
-        .admin-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 1001;
-            font-size: 1rem;
-            display: none; /* Initially hidden */
-        }
         .admin-form {
             display: flex;
             flex-direction: column;
@@ -535,82 +521,95 @@
             font-size: 0.8rem;
         }
 
-        /* Admin Login Modal */
-        .admin-login-modal {
+        /* Admin Authentication Modal */
+        .admin-auth-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
         }
-        .admin-login-modal.active {
+        .admin-auth-modal.active {
             display: flex;
         }
-        .admin-login-form {
+        .admin-auth-content {
             background: var(--card-bg);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            min-width: 300px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
         }
-        .admin-login-form h3 {
-            margin-bottom: 10px;
+        .admin-auth-content h3 {
             color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
         }
-        .admin-login-form p {
+        .admin-auth-content p {
+            color: #ff6b6b;
             margin-bottom: 20px;
-            opacity: 0.8;
-            font-size: 0.9rem;
+            font-weight: 600;
         }
-        .admin-login-form input {
+        .admin-auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .admin-auth-form input {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--accent-color);
             color: white;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             outline: none;
-            width: 100%;
-            margin-bottom: 15px;
+            font-size: 1rem;
         }
-        .admin-login-form button {
-            background: var(--accent-color);
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .auth-btn {
+            padding: 12px 25px;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            color: black;
             font-weight: bold;
-            margin: 5px;
+            font-size: 1rem;
         }
-        .admin-login-form .cancel-btn {
+        .auth-btn.login {
+            background: var(--accent-color);
+            color: black;
+        }
+        .auth-btn.cancel {
             background: #ff4444;
             color: white;
         }
     </style>
 </head>
 <body>
-    <!-- Admin Login Modal -->
-    <div class="admin-login-modal" id="admin-login-modal">
-        <div class="admin-login-form">
+    <!-- Admin Authentication Modal -->
+    <div class="admin-auth-modal" id="admin-auth-modal">
+        <div class="admin-auth-content">
             <h3>Admin Access</h3>
-            <p>For Admins Only</p>
-            <input type="text" id="admin-username" placeholder="Username">
-            <input type="password" id="admin-password" placeholder="Password">
-            <div>
-                <button onclick="verifyAdmin()">Login</button>
-                <button class="cancel-btn" onclick="closeAdminLogin()">Cancel</button>
+            <p>🔒 Only for administrators</p>
+            <div class="admin-auth-form">
+                <input type="text" id="admin-username" placeholder="Username">
+                <input type="password" id="admin-password" placeholder="Password">
+                <div class="auth-buttons">
+                    <button class="auth-btn login" onclick="authenticateAdmin()">Login</button>
+                    <button class="auth-btn cancel" onclick="closeAuthModal()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Admin Panel -->
-    <button class="admin-toggle" id="admin-toggle">⚙️</button>
     <div class="admin-panel" id="admin-panel">
         <h3>Admin Panel</h3>
         <div class="admin-form">
@@ -626,6 +625,7 @@
             <button onclick="addOffer()">Add Offer</button>
             <button onclick="saveData()">Save All Data</button>
             <button onclick="loadData()">Load Data</button>
+            <button onclick="logoutAdmin()" style="background: #ff4444; color: white;">Logout</button>
         </div>
         <div class="offer-list" id="offer-list"></div>
     </div>
@@ -751,13 +751,12 @@
     </footer>
 
     <script>
-        // Admin credentials
-        const ADMIN_USERNAME = "admin";
-        const ADMIN_PASSWORD = "admin123";
-
-        // Logo click counter for admin panel
+        // Admin authentication variables
         let logoClickCount = 0;
         let logoClickTimer = null;
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "giler2024";
+        let isAdminAuthenticated = false;
 
         // Data storage with localStorage support
         let freeDeals = JSON.parse(localStorage.getItem('giler_freeDeals')) || [
@@ -825,36 +824,81 @@
         const navLinks = document.querySelectorAll('.nav-link');
         const logo = document.getElementById('logo-click');
 
-        // Admin Panel Functions
-        function showAdminLogin() {
-            document.getElementById('admin-login-modal').classList.add('active');
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').classList.remove('active');
-            document.getElementById('admin-username').value = '';
-            document.getElementById('admin-password').value = '';
-            logoClickCount = 0; // Reset click count
-        }
-
-        function verifyAdmin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
-
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                closeAdminLogin();
-                showAdminPanel();
-            } else {
-                alert('Invalid credentials!');
+        // Admin Authentication Functions
+        function handleLogoClick() {
+            logoClickCount++;
+            
+            // Reset timer if it exists
+            if (logoClickTimer) {
+                clearTimeout(logoClickTimer);
+            }
+            
+            // Set a timer to reset the click count after 3 seconds of inactivity
+            logoClickTimer = setTimeout(() => {
+                logoClickCount = 0;
+            }, 3000);
+            
+            // Check if 5 clicks reached
+            if (logoClickCount === 5) {
+                logoClickCount = 0;
+                if (logoClickTimer) {
+                    clearTimeout(logoClickTimer);
+                }
+                
+                if (!isAdminAuthenticated) {
+                    showAuthModal();
+                } else {
+                    toggleAdmin();
+                }
+            } else if (logoClickCount < 5) {
+                // Normal logo click behavior - scroll to home
+                document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
+                navLinks.forEach(l => l.classList.remove('active'));
+                navLinks[0].classList.add('active'); // Home link active
             }
         }
 
-        function showAdminPanel() {
-            document.getElementById('admin-toggle').style.display = 'block';
-            toggleAdmin();
+        function showAuthModal() {
+            document.getElementById('admin-auth-modal').classList.add('active');
+            document.getElementById('admin-username').focus();
         }
 
+        function closeAuthModal() {
+            document.getElementById('admin-auth-modal').classList.remove('active');
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function authenticateAdmin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                closeAuthModal();
+                toggleAdmin();
+                alert('Welcome, Admin! 🎉');
+            } else {
+                alert('❌ Invalid credentials! Access denied.');
+                document.getElementById('admin-username').value = '';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-username').focus();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            document.getElementById('admin-panel').classList.remove('active');
+            alert('You have been logged out successfully.');
+        }
+
+        // Admin Panel Functions
         function toggleAdmin() {
+            if (!isAdminAuthenticated) {
+                showAuthModal();
+                return;
+            }
+            
             const panel = document.getElementById('admin-panel');
             panel.classList.toggle('active');
             if (panel.classList.contains('active')) {
@@ -957,34 +1001,38 @@
             populateCards(games, gamesGrid);
         }
 
-        // Admin panel toggle
-        document.getElementById('admin-toggle').addEventListener('click', toggleAdmin);
+        // Function to ensure URL has proper protocol
+        function ensureProperUrl(url) {
+            if (!url) return "";
+            
+            // If URL already has protocol, return as is
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                return url;
+            }
+            
+            // If URL starts with www., add https://
+            if (url.startsWith('www.')) {
+                return 'https://' + url;
+            }
+            
+            // If URL doesn't have protocol or www., add https://
+            return 'https://' + url;
+        }
 
-        // Logo click functionality for admin panel
-        logo.addEventListener('click', () => {
-            logoClickCount++;
-            
-            // Reset timer on each click
-            if (logoClickTimer) {
-                clearTimeout(logoClickTimer);
+        // Logo click event - now handles the 5-click authentication
+        logo.addEventListener('click', handleLogoClick);
+
+        // Enter key support for admin authentication
+        document.getElementById('admin-username').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('admin-password').focus();
             }
-            
-            // Set timer to reset click count after 3 seconds of no clicks
-            logoClickTimer = setTimeout(() => {
-                logoClickCount = 0;
-            }, 3000);
-            
-            // Check if clicked 5 times
-            if (logoClickCount === 5) {
-                showAdminLogin();
-                logoClickCount = 0; // Reset counter
-                return; // Don't scroll to home
+        });
+
+        document.getElementById('admin-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                authenticateAdmin();
             }
-            
-            // Normal scroll to home functionality
-            document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
-            navLinks.forEach(l => l.classList.remove('active'));
-            navLinks[0].classList.add('active'); // Home link active
         });
 
         // Navigation smooth scroll and active state
@@ -1109,10 +1157,11 @@
             }
         }
 
-        // Proceed to claim button - Modified to open in new tab
+        // Proceed to claim button (redirect to the content locker) - FIXED URL HANDLING
         document.getElementById('proceed-claim-btn').addEventListener('click', function() {
             if (currentLockerUrl) {
-                window.open(currentLockerUrl, "_blank"); // Opens in new tab
+                const properUrl = ensureProperUrl(currentLockerUrl);
+                window.open(properUrl, "_blank");
             } else {
                 alert("Please select an offer first!");
             }
