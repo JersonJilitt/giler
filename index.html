@@ -3,12 +3,1256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giler</title>
-    <script>var REPO_BASE_URL = 'https://giler.site';</script>
+    <title>Giler - Premium Rewards Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://i.imgur.com/aKPsllz.png">
+    <link rel="shortcut icon" href="https://i.imgur.com/aKPsllz.png">
+    <style>
+        :root {
+            --primary-color: #6c42f5;
+            --secondary-color: #ff00ff;
+            --accent-color: #00ffaa;
+            --background-color: #0a0a2a;
+            --card-bg: #1a1a3a;
+            --text-color: #fff;
+            --selected-color: #00ff00;
+            --header-bg: rgba(10, 10, 42, 0.9);
+            --section-bg: #121233;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(108, 66, 245, 0.1), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.1), transparent 25%),
+                radial-gradient(circle at 50% 80%, rgba(0, 255, 170, 0.1), transparent 25%);
+            background-attachment: fixed;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        header {
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .logo img { height: 40px; }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav { display: flex; gap: 25px; }
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 5px 8px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        nav a:hover, nav a.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: #fff;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+            padding: 5px;
+        }
+        .search-bar i { color: var(--accent-color); }
+        .home-section {
+            text-align: center;
+            padding: 50px 0 30px;
+        }
+        .home-section h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 18px rgba(108, 66, 245, 0.5);
+        }
+        .home-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 35px;
+        }
+        .how-it-works-section {
+            background: var(--section-bg);
+            border-radius: 16px;
+            margin: 35px 0 50px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .how-it-works-section h2 {
+            font-size: 2rem;
+            margin-bottom: 18px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .how-support-note {
+            margin-bottom: 30px;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 1.07rem;
+            opacity: 0.97;
+        }
+        .how-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 0 auto;
+            max-width: 900px;
+            position: relative;
+        }
+        .how-steps::before {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            z-index: 1;
+        }
+        .how-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        .how-step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            margin-bottom: 13px;
+        }
+        .how-step.active .how-step-number {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 20px rgba(108, 66, 245, 0.5);
+        }
+        .how-step h3 { margin-bottom: 8px; font-size: 1.13rem; color: var(--accent-color);}
+        .how-step p { font-size: 0.98rem; opacity: 0.83;}
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            background: var(--card-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        .tab-button.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 15px rgba(108, 66, 245, 0.5);
+        }
+        .tab-button:hover:not(.active) {
+            background: rgba(108, 66, 245, 0.2);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+            background-size: 400% 400%;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card:hover::before {
+            opacity: 1;
+            animation: gradientGlow 3s ease infinite;
+        }
+        @keyframes gradientGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .card.selected {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px rgba(0, 255, 170, 0.5);
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card:active { transform: scale(0.98); }
+        .card img {
+            width: 100%;
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .card:hover img { transform: scale(1.1); }
+        .card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+        .card p { font-size: 0.9rem; opacity: 0.7; }
+        .steps-container {
+            background: var(--section-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            display: none;
+        }
+        .steps-container.active { display: block; }
+        .steps-header { text-align: center; margin-bottom: 30px; }
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            z-index: 1;
+        }
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+        }
+        .step.active .step-number {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 20px rgba(108, 66, 245, 0.5);
+        }
+        .step-text { padding: 0 10px; }
+        .step-action { text-align: center; margin-top: 20px; }
+        .action-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(108, 66, 245, 0.3);
+            min-width: 200px;
+            touch-action: manipulation;
+        }
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 66, 245, 0.4);
+        }
+        .action-button:active {
+            transform: translateY(0);
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Enhanced responsive design */
+        @media (min-width: 1400px) {
+            .container { max-width: 1300px; }
+            .cards-grid { grid-template-columns: repeat(4, 1fr); }
+            body { font-size: 18px; }
+            .home-section h1 { font-size: 3.2rem; }
+        }
+        
+        @media (max-width: 950px) {
+            .how-steps { 
+                flex-direction: column; 
+                gap: 30px;
+            }
+            .how-steps::before { display: none; }
+            .how-step-number {
+                width: 70px;
+                height: 70px;
+                font-size: 1.7rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content { 
+                flex-direction: column; 
+                gap: 15px; 
+            }
+            nav { 
+                margin-top: 8px; 
+                width: 100%;
+                justify-content: center;
+            }
+            .search-bar { 
+                width: 100%; 
+                max-width: 300px; 
+            }
+            .cards-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 15px; 
+            }
+            .steps { 
+                flex-direction: column; 
+                gap: 30px; 
+            }
+            .steps::before { display: none; }
+            .home-section h1 { font-size: 2.3rem; }
+            .home-section p { font-size: 1.1rem; }
+            .how-it-works-section h2 { font-size: 1.8rem; }
+            .how-support-note { font-size: 1rem; }
+            .step-number {
+                width: 70px;
+                height: 70px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cards-grid { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+            nav { 
+                gap: 10px; 
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            nav a { 
+                font-size: 0.9rem; 
+                padding: 8px 12px;
+            }
+            .tab-button { 
+                padding: 10px 15px; 
+                font-size: 0.9rem; 
+                flex: 1;
+                min-width: 0;
+            }
+            .home-section h1 { 
+                font-size: 2rem; 
+                padding: 0 10px;
+            }
+            .home-section p {
+                font-size: 1rem;
+                padding: 0 15px;
+            }
+            .steps-container {
+                padding: 20px 15px;
+            }
+            .action-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .home-section h1 { font-size: 1.8rem; }
+            .how-step-number, .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 1.3rem;
+            }
+            .card {
+                padding: 15px;
+            }
+            .card h3 { font-size: 1.1rem; }
+            .step-text h3 { font-size: 1rem; }
+            .step-text p { font-size: 0.9rem; }
+            body { font-size: 15px; }
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
+            display: none;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .admin-panel.active { display: block; }
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .admin-form input, .admin-form textarea {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            outline: none;
+        }
+        .admin-form button {
+            background: var(--accent-color);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+        }
+        .admin-form select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .offer-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .offer-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            background: #ff4444;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Admin Authentication Modal */
+        .admin-auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-auth-modal.active {
+            display: flex;
+        }
+        .admin-auth-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .admin-auth-content h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        .admin-auth-content p {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .admin-auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .admin-auth-form input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .auth-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .auth-btn.login {
+            background: var(--accent-color);
+            color: black;
+        }
+        .auth-btn.cancel {
+            background: #ff4444;
+            color: white;
+        }
+        
+        /* Loading Spinner Styles */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
+        .loading-spinner::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 2px solid var(--accent-color);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Giler Website</h1>
-    <p>This is the original content of the website.</p>
-    <p>Enjoy your stay!</p>
+    <!-- Admin Authentication Modal -->
+    <div class="admin-auth-modal" id="admin-auth-modal">
+        <div class="admin-auth-content">
+            <h3>Admin Access</h3>
+            <p>🔒 Only for administrators</p>
+            <div class="admin-auth-form">
+                <input type="text" id="admin-username" placeholder="Username">
+                <input type="password" id="admin-password" placeholder="Password">
+                <div class="auth-buttons">
+                    <button class="auth-btn login" onclick="authenticateAdmin()">Login</button>
+                    <button class="auth-btn cancel" onclick="closeAuthModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="admin-panel">
+        <h3>Admin Panel</h3>
+        <div class="admin-form">
+            <select id="offer-category">
+                <option value="freeDeals">Free Deals</option>
+                <option value="apps">Apps</option>
+                <option value="games">Games</option>
+            </select>
+            <input type="text" id="offer-title" placeholder="Offer Title">
+            <input type="url" id="offer-image" placeholder="Image URL">
+            <textarea id="offer-description" placeholder="Description"></textarea>
+            <input type="url" id="offer-locker" placeholder="CPA Locker URL">
+            <button onclick="addOffer()">Add Offer</button>
+            <button onclick="saveData()">Save All Data</button>
+            <button onclick="loadData()">Load Data</button>
+            <button onclick="logoutAdmin()" style="background: #ff4444; color: white;">Logout</button>
+        </div>
+        <div class="offer-list" id="offer-list"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="logo-click">
+                    <div class="logo-text">Giler</div>
+                </div>
+                <nav>
+                    <a href="#home" class="nav-link active" data-section="home-section">Home</a>
+                    <a href="#how-it-works" class="nav-link" data-section="how-it-works-section">How it Works</a>
+                    <a href="#search-section" class="nav-link" data-section="search-section">Search</a>
+                </nav>
+                <div class="search-bar" style="display:none;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search offers...">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Home Section -->
+        <section class="home-section" id="home-section">
+            <h1>Welcome to Giler</h1>
+            <p>
+                Discover exclusive free deals, premium apps & games, and top offers for your favorite services.<br>
+                Enjoy easy access to rewards by simply completing offers. Start exploring now!
+            </p>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section" id="how-it-works-section">
+            <h2>How It Works</h2>
+            <div class="how-support-note">
+                By completing one of the offers, you help support our platform and keep rewards free for everyone.
+            </div>
+            <div class="how-steps">
+                <div class="how-step active">
+                    <div class="how-step-number">1</div>
+                    <h3>Choose Your App or Game</h3>
+                    <p>Select your favorite app or game from the available offers below.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-number">2</div>
+                    <h3>Complete an Offer</h3>
+                    <p>Finish a simple offer to unlock your selected reward and support us.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-number">3</div>
+                    <h3>Enjoy Your Reward</h3>
+                    <p>Access premium content instantly and enjoy your benefits!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search-section" style="margin-bottom: 40px; text-align: center;">
+            <h2 style="margin-bottom: 16px; font-size: 1.5rem;">Search Offers</h2>
+            <div class="search-bar" style="margin: 0 auto; display: flex; max-width: 350px;">
+                <i class="fas fa-search"></i>
+                <input type="text" id="main-search-input" placeholder="Type to search for deals, apps, or games..." style="width: 100%;">
+            </div>
+        </section>
+
+        <!-- Main Offers Section with Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="free-deals">Free Deals</button>
+            <button class="tab-button" data-tab="apps">Apps</button>
+            <button class="tab-button" data-tab="games">Games</button>
+        </div>
+
+        <div class="tab-content active" id="free-deals">
+            <div class="cards-grid"></div>
+        </div>
+        <div class="tab-content" id="apps">
+            <div class="cards-grid"></div>
+        </div>
+        <div class="tab-content" id="games">
+            <div class="cards-grid"></div>
+        </div>
+
+        <div class="steps-container" id="steps-process">
+            <div class="steps-header">
+                <h2>Claim Your <span id="selected-offer-name">Spotify Premium</span></h2>
+                <p>Follow these simple steps to unlock your reward</p>
+            </div>
+            <div class="steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        <h3>Select Your Offer</h3>
+                        <p>Choose from available offers</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        <h3>Complete the Offer</h3>
+                        <p>Help us while getting your reward</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        <h3>Enjoy Your Reward</h3>
+                        <p>Unlock your premium content</p>
+                    </div>
+                </div>
+            </div>
+            <div class="step-action">
+                <button class="action-button" id="proceed-claim-btn">Proceed to Claim</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Giler. All rights reserved. | Designed for <b>Blogger</b>.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Admin authentication variables
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "giler2024";
+        let isAdminAuthenticated = false;
+
+        // GitHub API configuration
+        const GITHUB_CONFIG = {
+            owner: 'JersonJilitt',
+            repo: 'giler',
+            branch: 'main',
+            path: 'data/offers.json',
+        };
+
+        // ✅ FIXED: Updated REPO_BASE_URL to use your custom domain
+        const REPO_BASE_URL = 'https://giler.site';
+
+        // Default fallback data
+        const DEFAULT_OFFERS = {
+            freeDeals: [
+                {
+                    title: "Spotify Premium",
+                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+                    description: "Free premium account for 6 months",
+                    lockerUrl: "https://your-cpa-locker.com/spotify-premium"
+                },
+                {
+                    title: "Netflix Premium",
+                    image: "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
+                    description: "1 year free subscription",
+                    lockerUrl: "https://your-cpa-locker.com/netflix-premium"
+                },
+                {
+                    title: "YouTube Premium",
+                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+                    description: "Ad-free experience for 12 months",
+                    lockerUrl: "https://your-cpa-locker.com/youtube-premium"
+                }
+            ],
+            apps: [
+                {
+                    title: "Spotify Mod APK",
+                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+                    description: "Premium features unlocked",
+                    lockerUrl: "https://your-cpa-locker.com/spotify-mod-apk"
+                },
+                {
+                    title: "YouTube Mod APK",
+                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
+                    description: "Ad-free, background play",
+                    lockerUrl: "https://your-cpa-locker.com/youtube-mod-apk"
+                }
+            ],
+            games: [
+                {
+                    title: "PUBG Mobile Mod",
+                    image: "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
+                    description: "Aimbot, wallhack, no recoil",
+                    lockerUrl: "https://your-cpa-locker.com/pubg-mobile-mod"
+                },
+                {
+                    title: "Free Fire Mod",
+                    image: "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
+                    description: "Unlimited diamonds, unlocked skins",
+                    lockerUrl: "https://your-cpa-locker.com/free-fire-mod"
+                }
+            ]
+        };
+
+        // Data storage - will be loaded from GitHub API
+        let freeDeals = [];
+        let apps = [];
+        let games = [];
+        let isLoading = false;
+
+        // DOM elements
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const freeDealsGrid = document.querySelector('#free-deals .cards-grid');
+        const appsGrid = document.querySelector('#apps .cards-grid');
+        const gamesGrid = document.querySelector('#games .cards-grid');
+        const stepsProcess = document.getElementById('steps-process');
+        const selectedOfferName = document.getElementById('selected-offer-name');
+        let currentLockerUrl = "";
+        const searchInputHeader = document.querySelector('header .search-bar input');
+        const mainSearchInput = document.getElementById('main-search-input');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const logo = document.getElementById('logo-click');
+
+        // Admin Authentication Functions
+        function handleLogoClick() {
+            logoClickCount++;
+            
+            // Reset timer if it exists
+            if (logoClickTimer) {
+                clearTimeout(logoClickTimer);
+            }
+            
+            // Set a timer to reset the click count after 3 seconds of inactivity
+            logoClickTimer = setTimeout(() => {
+                logoClickCount = 0;
+            }, 3000);
+            
+            // Check if 5 clicks reached
+            if (logoClickCount === 5) {
+                logoClickCount = 0;
+                if (logoClickTimer) {
+                    clearTimeout(logoClickTimer);
+                }
+                
+                if (!isAdminAuthenticated) {
+                    showAuthModal();
+                } else {
+                    toggleAdmin();
+                }
+            } else if (logoClickCount < 5) {
+                // Normal logo click behavior - scroll to home
+                document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
+                navLinks.forEach(l => l.classList.remove('active'));
+                navLinks[0].classList.add('active'); // Home link active
+            }
+        }
+
+        function showAuthModal() {
+            document.getElementById('admin-auth-modal').classList.add('active');
+            document.getElementById('admin-username').focus();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('admin-auth-modal').classList.remove('active');
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function authenticateAdmin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                closeAuthModal();
+                toggleAdmin();
+                alert('Welcome, Admin! 🎉');
+            } else {
+                alert('❌ Invalid credentials! Access denied.');
+                document.getElementById('admin-username').value = '';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-username').focus();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            document.getElementById('admin-panel').classList.remove('active');
+            alert('You have been logged out successfully.');
+        }
+
+        // Admin Panel Functions
+        function toggleAdmin() {
+            if (!isAdminAuthenticated) {
+                showAuthModal();
+                return;
+            }
+            
+            const panel = document.getElementById('admin-panel');
+            panel.classList.toggle('active');
+            if (panel.classList.contains('active')) {
+                updateOfferList();
+            }
+        }
+
+        function addOffer() {
+            const category = document.getElementById('offer-category').value;
+            const title = document.getElementById('offer-title').value;
+            const image = document.getElementById('offer-image').value;
+            const description = document.getElementById('offer-description').value;
+            const lockerUrl = document.getElementById('offer-locker').value;
+
+            if (!title || !description || !lockerUrl) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            const newOffer = {
+                title: title,
+                image: image || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" fill="%23333"/><text x="60" y="60" text-anchor="middle" dy="0.3em" fill="white" font-family="Arial" font-size="14">No Image</text></svg>',
+                description: description,
+                lockerUrl: lockerUrl
+            };
+
+            if (category === 'freeDeals') {
+                freeDeals.push(newOffer);
+            } else if (category === 'apps') {
+                apps.push(newOffer);
+            } else if (category === 'games') {
+                games.push(newOffer);
+            }
+
+            // Clear form
+            document.getElementById('offer-title').value = '';
+            document.getElementById('offer-image').value = '';
+            document.getElementById('offer-description').value = '';
+            document.getElementById('offer-locker').value = '';
+
+            // Refresh displays
+            refreshAllGrids();
+            updateOfferList();
+            saveData();
+            alert('Offer added successfully!');
+        }
+
+        function deleteOffer(category, index) {
+            if (confirm('Are you sure you want to delete this offer?')) {
+                if (category === 'freeDeals') {
+                    freeDeals.splice(index, 1);
+                } else if (category === 'apps') {
+                    apps.splice(index, 1);
+                } else if (category === 'games') {
+                    games.splice(index, 1);
+                }
+                refreshAllGrids();
+                updateOfferList();
+                saveData();
+                alert('Offer deleted successfully!');
+            }
+        }
+
+        function updateOfferList() {
+            const offerList = document.getElementById('offer-list');
+            offerList.innerHTML = '';
+
+            const allOffers = [
+                ...freeDeals.map((offer, index) => ({...offer, category: 'freeDeals', index})),
+                ...apps.map((offer, index) => ({...offer, category: 'apps', index})),
+                ...games.map((offer, index) => ({...offer, category: 'games', index}))
+            ];
+
+            allOffers.forEach(offer => {
+                const offerItem = document.createElement('div');
+                offerItem.className = 'offer-item';
+                offerItem.innerHTML = `
+                    <div>
+                        <strong>${offer.title}</strong><br>
+                        <small>${offer.category}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteOffer('${offer.category}', ${offer.index})">Delete</button>
+                `;
+                offerList.appendChild(offerItem);
+            });
+        }
+
+        function saveData() {
+            const data = {
+                freeDeals: freeDeals,
+                apps: apps,
+                games: games,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('gilerData', JSON.stringify(data));
+            console.log('Data saved to localStorage');
+        }
+
+        async function loadData() {
+            isLoading = true;
+            showLoadingState();
+            
+            try {
+                // Try to load from localStorage first
+                const localData = localStorage.getItem('gilerData');
+                if (localData) {
+                    const data = JSON.parse(localData);
+                    freeDeals = data.freeDeals || DEFAULT_OFFERS.freeDeals;
+                    apps = data.apps || DEFAULT_OFFERS.apps;
+                    games = data.games || DEFAULT_OFFERS.games;
+                    console.log('Data loaded from localStorage');
+                } else {
+                    // Fallback to default offers
+                    freeDeals = [...DEFAULT_OFFERS.freeDeals];
+                    apps = [...DEFAULT_OFFERS.apps];
+                    games = [...DEFAULT_OFFERS.games];
+                    console.log('Using default offers');
+                }
+                
+                refreshAllGrids();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                // Use default offers on error
+                freeDeals = [...DEFAULT_OFFERS.freeDeals];
+                apps = [...DEFAULT_OFFERS.apps];
+                games = [...DEFAULT_OFFERS.games];
+                refreshAllGrids();
+            } finally {
+                isLoading = false;
+                hideLoadingState();
+            }
+        }
+
+        function showLoadingState() {
+            const grids = document.querySelectorAll('.cards-grid');
+            grids.forEach(grid => {
+                grid.innerHTML = '<div class="loading-spinner">Loading offers...</div>';
+            });
+        }
+
+        function hideLoadingState() {
+            // Loading states will be replaced by refreshAllGrids()
+        }
+
+        function refreshAllGrids() {
+            displayOffers(freeDeals, freeDealsGrid);
+            displayOffers(apps, appsGrid);
+            displayOffers(games, gamesGrid);
+        }
+
+        function displayOffers(offers, grid) {
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            offers.forEach((offer, index) => {
+                const card = createOfferCard(offer, index);
+                grid.appendChild(card);
+            });
+        }
+
+        function createOfferCard(offer, index) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${offer.image}" alt="${offer.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"120\\" viewBox=\\"0 0 120 120\\"><rect width=\\"120\\" height=\\"120\\" fill=\\"%23333\\"/><text x=\\"60\\" y=\\"60\\" text-anchor=\\"middle\\" dy=\\"0.3em\\" fill=\\"white\\" font-family=\\"Arial\\" font-size=\\"14\\">No Image</text></svg>'">
+                <h3>${offer.title}</h3>
+                <p>${offer.description}</p>
+            `;
+            
+            card.addEventListener('click', () => selectOffer(offer));
+            return card;
+        }
+
+        function selectOffer(offer) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Update the steps process
+            selectedOfferName.textContent = offer.title;
+            currentLockerUrl = offer.lockerUrl;
+            stepsProcess.classList.add('active');
+            stepsProcess.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Tab functionality
+        function initializeTabs() {
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    button.classList.add('active');
+                    const targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            const performSearch = (query) => {
+                if (!query.trim()) {
+                    refreshAllGrids();
+                    return;
+                }
+                
+                const searchTerm = query.toLowerCase();
+                const filteredFreeDeals = freeDeals.filter(offer => 
+                    offer.title.toLowerCase().includes(searchTerm) ||
+                    offer.description.toLowerCase().includes(searchTerm)
+                );
+                const filteredApps = apps.filter(offer => 
+                    offer.title.toLowerCase().includes(searchTerm) ||
+                    offer.description.toLowerCase().includes(searchTerm)
+                );
+                const filteredGames = games.filter(offer => 
+                    offer.title.toLowerCase().includes(searchTerm) ||
+                    offer.description.toLowerCase().includes(searchTerm)
+                );
+                
+                displayOffers(filteredFreeDeals, freeDealsGrid);
+                displayOffers(filteredApps, appsGrid);
+                displayOffers(filteredGames, gamesGrid);
+            };
+
+            if (searchInputHeader) {
+                searchInputHeader.addEventListener('input', (e) => {
+                    performSearch(e.target.value);
+                });
+            }
+
+            if (mainSearchInput) {
+                mainSearchInput.addEventListener('input', (e) => {
+                    performSearch(e.target.value);
+                });
+            }
+        }
+
+        // Navigation functionality
+        function initializeNavigation() {
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all nav links
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    link.classList.add('active');
+                    
+                    // Scroll to section
+                    const sectionId = link.getAttribute('data-section');
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        }
+
+        // Proceed to claim functionality
+        function initializeProceedButton() {
+            const proceedBtn = document.getElementById('proceed-claim-btn');
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    if (currentLockerUrl) {
+                        window.open(currentLockerUrl, '_blank');
+                    } else {
+                        alert('Please select an offer first!');
+                    }
+                });
+            }
+        }
+
+        // Logo click handler
+        function initializeLogoClick() {
+            if (logo) {
+                logo.addEventListener('click', handleLogoClick);
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTabs();
+            initializeSearch();
+            initializeNavigation();
+            initializeProceedButton();
+            initializeLogoClick();
+            loadData(); // Load data on page load
+        });
+
+        // Handle Enter key in auth modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.getElementById('admin-auth-modal').classList.contains('active')) {
+                authenticateAdmin();
+            }
+        });
+    </script>
 </body>
 </html>
