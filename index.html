@@ -456,143 +456,6 @@
             body { font-size: 15px; }
         }
 
-        /* Admin Panel Styles */
-        .admin-panel {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 15px;
-            z-index: 1000;
-            display: none;
-            max-width: 300px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .admin-panel.active { display: block; }
-        .admin-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .admin-form input, .admin-form textarea {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--accent-color);
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-            outline: none;
-        }
-        .admin-form button {
-            background: var(--accent-color);
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            color: black;
-            font-weight: bold;
-        }
-        .admin-form select {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--accent-color);
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-        }
-        .offer-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-        .offer-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .delete-btn {
-            background: #ff4444;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        /* Admin Authentication Modal */
-        .admin-auth-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-        .admin-auth-modal.active {
-            display: flex;
-        }
-        .admin-auth-content {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        .admin-auth-content h3 {
-            color: var(--accent-color);
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-        .admin-auth-content p {
-            color: #ff6b6b;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .admin-auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .admin-auth-form input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--accent-color);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            outline: none;
-            font-size: 1rem;
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .auth-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        .auth-btn.login {
-            background: var(--accent-color);
-            color: black;
-        }
-        .auth-btn.cancel {
-            background: #ff4444;
-            color: white;
-        }
-        
         /* Loading Spinner Styles */
         .loading-spinner {
             display: flex;
@@ -620,43 +483,6 @@
     </style>
 </head>
 <body>
-    <!-- Admin Authentication Modal -->
-    <div class="admin-auth-modal" id="admin-auth-modal">
-        <div class="admin-auth-content">
-            <h3>Admin Access</h3>
-            <p>🔒 Only for administrators</p>
-            <div class="admin-auth-form">
-                <input type="text" id="admin-username" placeholder="Username">
-                <input type="password" id="admin-password" placeholder="Password">
-                <div class="auth-buttons">
-                    <button class="auth-btn login" onclick="authenticateAdmin()">Login</button>
-                    <button class="auth-btn cancel" onclick="closeAuthModal()">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="admin-panel">
-        <h3>Admin Panel</h3>
-        <div class="admin-form">
-            <select id="offer-category">
-                <option value="freeDeals">Free Deals</option>
-                <option value="apps">Apps</option>
-                <option value="games">Games</option>
-            </select>
-            <input type="text" id="offer-title" placeholder="Offer Title">
-            <input type="url" id="offer-image" placeholder="Image URL">
-            <textarea id="offer-description" placeholder="Description"></textarea>
-            <input type="url" id="offer-locker" placeholder="CPA Locker URL">
-            <button onclick="addOffer()">Add Offer</button>
-            <button onclick="saveData()">Save All Data</button>
-            <button onclick="loadData()">Load Data</button>
-            <button onclick="logoutAdmin()" style="background: #ff4444; color: white;">Logout</button>
-        </div>
-        <div class="offer-list" id="offer-list"></div>
-    </div>
-
     <header>
         <div class="container">
             <div class="header-content">
@@ -778,13 +604,6 @@
     </footer>
 
     <script>
-        // Admin authentication variables
-        let logoClickCount = 0;
-        let logoClickTimer = null;
-        const ADMIN_USERNAME = "admin";
-        const ADMIN_PASSWORD = "giler2024";
-        let isAdminAuthenticated = false;
-
         // GitHub API configuration
         const GITHUB_CONFIG = {
             owner: 'JersonJilitt',
@@ -793,66 +612,79 @@
             path: 'data/offers.json',
         };
 
-        // ✅ FIXED: Updated REPO_BASE_URL to use your custom domain
         const REPO_BASE_URL = 'https://giler.site';
 
-        // Default fallback data
-        const DEFAULT_OFFERS = {
+        // 📝 HOW TO ADD OFFERS: Edit these arrays directly to add new offers
+        const OFFERS_DATA = {
             freeDeals: [
                 {
-                    title: "Spotify Premium",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
-                    description: "Free premium account for 6 months",
-                    lockerUrl: "https://cpabuild.com/gateway/123456"
+                    title: "1 Year Perplexity AI Pro Subscription",
+                    image: "https://i.imgur.com/K2nHTyr.png",
+                    description: "Free with PayPal (New Pro Subscribers Only)",
+                    lockerUrl: "https://lockverify.net/cl/i/j78r7v"
                 },
                 {
-                    title: "Netflix Premium",
-                    image: "https://yt3.googleusercontent.com/CvgBA1ypUZNxOjiCX0l1V2FbAm7oSDPZE4YkMvkpT_4iLXQ3IXWVtBgWnznHxgtcUoj50TXqZA=s900-c-k-c0x00ffffff-no-rj",
-                    description: "1 year free subscription",
-                    lockerUrl: "https://cpabuild.com/gateway/234567"
-                },
-                {
-                    title: "YouTube Premium",
-                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
-                    description: "Ad-free experience for 12 months",
-                    lockerUrl: "https://cpabuild.com/gateway/345678"
+                    title: "Free £10 gift card at NQ64 Arcade",
+                    image: "https://i.imgur.com/UJ3r9dB.png",
+                    description: "(e.g. 20 game tokens) via sign-up - valid at all 12 locations",
+                    lockerUrl: "https://lockverify.net/cl/i/qnej63"
                 }
+                // ➕ ADD MORE FREE DEALS HERE:
+                // {
+                //     title: "Your New Deal",
+                //     image: "https://example.com/image.jpg",
+                //     description: "Description of your deal",
+                //     lockerUrl: "https://your-cpa-locker-url.com"
+                // }
             ],
             apps: [
                 {
                     title: "Spotify Mod APK",
                     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
                     description: "Premium features unlocked",
-                    lockerUrl: "https://cpabuild.com/gateway/456789"
+                    lockerUrl: "https://lockedapp.net/cl/i/pq2eq3"
                 },
                 {
-                    title: "YouTube Mod APK",
-                    image: "https://www.gstatic.com/youtube/img/promos/growth/0a4e5e7e1c0d3d2d7b9b7c9f0c8c8b5e.png",
-                    description: "Ad-free, background play",
-                    lockerUrl: "https://cpabuild.com/gateway/567890"
+                    title: "CapCut - Video Editor v15.2.0 (Pro)",
+                    image: "https://i.imgur.com/DpNQvxJ.png",
+                    description: "Fixed some known issues - improved the trimming experience.",
+                    lockerUrl: "https://lockedapp.net/cl/i/5neplw"
                 }
+                // ➕ ADD MORE APPS HERE:
+                // {
+                //     title: "Your New App",
+                //     image: "https://example.com/app-image.jpg",
+                //     description: "Description of your app",
+                //     lockerUrl: "https://your-cpa-locker-url.com"
+                // }
             ],
             games: [
                 {
-                    title: "PUBG Mobile Mod",
-                    image: "https://static.wikia.nocookie.net/logopedia/images/2/25/PUBG_Mobile_Logo.png",
-                    description: "Aimbot, wallhack, no recoil",
-                    lockerUrl: "https://cpabuild.com/gateway/678901"
+                    title: "Drift Max Pro Car Racing Game v2.5.63",
+                    image: "https://i.imgur.com/8EnTIoE.png",
+                    description: "(MOD, Unlimited Money)",
+                    lockerUrl: "https://lockedapp.net/cl/i/d2qx2k"
                 },
                 {
-                    title: "Free Fire Mod",
-                    image: "https://play-lh.googleusercontent.com/-8EDwq4Riyd4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rf7FJwA7Tgk_9g4xFjR2mDgR3-00w/photo.jpg",
-                    description: "Unlimited diamonds, unlocked skins",
-                    lockerUrl: "https://cpabuild.com/gateway/789012"
+                    title: "TopSpeed: Drag & Fast Racing v1.44.12",
+                    image: "https://i.imgur.com/WFAu7Ef.png",
+                    description: "(Mod, Unlimited Money)",
+                    lockerUrl: "https://lockedapp.net/cl/i/grq3jr"
                 }
+                // ➕ ADD MORE GAMES HERE:
+                // {
+                //     title: "Your New Game",
+                //     image: "https://example.com/game-image.jpg",
+                //     description: "Description of your game mod",
+                //     lockerUrl: "https://your-cpa-locker-url.com"
+                // }
             ]
         };
 
-        // Data storage - will be loaded from GitHub API
-        let freeDeals = [];
-        let apps = [];
-        let games = [];
-        let isLoading = false;
+        // Data storage - loaded from the arrays above
+        let freeDeals = [...OFFERS_DATA.freeDeals];
+        let apps = [...OFFERS_DATA.apps];
+        let games = [...OFFERS_DATA.games];
 
         // DOM elements
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -867,260 +699,6 @@
         const mainSearchInput = document.getElementById('main-search-input');
         const navLinks = document.querySelectorAll('.nav-link');
         const logo = document.getElementById('logo-click');
-
-        // Admin Authentication Functions
-        function handleLogoClick() {
-            logoClickCount++;
-            
-            // Reset timer if it exists
-            if (logoClickTimer) {
-                clearTimeout(logoClickTimer);
-            }
-            
-            // Set a timer to reset the click count after 3 seconds of inactivity
-            logoClickTimer = setTimeout(() => {
-                logoClickCount = 0;
-            }, 3000);
-            
-            // Check if 5 clicks reached
-            if (logoClickCount === 5) {
-                logoClickCount = 0;
-                if (logoClickTimer) {
-                    clearTimeout(logoClickTimer);
-                }
-                
-                if (!isAdminAuthenticated) {
-                    showAuthModal();
-                } else {
-                    toggleAdmin();
-                }
-            } else if (logoClickCount < 5) {
-                // Normal logo click behavior - scroll to home
-                document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
-                navLinks.forEach(l => l.classList.remove('active'));
-                navLinks[0].classList.add('active'); // Home link active
-            }
-        }
-
-        function showAuthModal() {
-            document.getElementById('admin-auth-modal').classList.add('active');
-            document.getElementById('admin-username').focus();
-        }
-
-        function closeAuthModal() {
-            document.getElementById('admin-auth-modal').classList.remove('active');
-            document.getElementById('admin-username').value = '';
-            document.getElementById('admin-password').value = '';
-        }
-
-        function authenticateAdmin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
-            
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                isAdminAuthenticated = true;
-                closeAuthModal();
-                toggleAdmin();
-                alert('Welcome, Admin! 🎉');
-            } else {
-                alert('❌ Invalid credentials! Access denied.');
-                document.getElementById('admin-username').value = '';
-                document.getElementById('admin-password').value = '';
-                document.getElementById('admin-username').focus();
-            }
-        }
-
-        function logoutAdmin() {
-            isAdminAuthenticated = false;
-            document.getElementById('admin-panel').classList.remove('active');
-            alert('You have been logged out successfully.');
-        }
-
-        // Admin Panel Functions
-        function toggleAdmin() {
-            if (!isAdminAuthenticated) {
-                showAuthModal();
-                return;
-            }
-            
-            const panel = document.getElementById('admin-panel');
-            panel.classList.toggle('active');
-            if (panel.classList.contains('active')) {
-                updateOfferList();
-            }
-        }
-
-        function addOffer() {
-            const category = document.getElementById('offer-category').value;
-            const title = document.getElementById('offer-title').value;
-            const image = document.getElementById('offer-image').value;
-            const description = document.getElementById('offer-description').value;
-            const lockerUrl = document.getElementById('offer-locker').value;
-
-            if (!title || !description || !lockerUrl) {
-                alert('Please fill in all required fields!');
-                return;
-            }
-
-            // ✅ FIXED: Proper SVG placeholder that eliminates "> symbols
-            const newOffer = {
-                title: title,
-                image: image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"%3E%3Crect width="120" height="120" fill="%23333"/%3E%3Ccircle cx="60" cy="50" r="20" fill="%23666"/%3E%3Crect x="30" y="80" width="60" height="25" rx="5" fill="%23666"/%3E%3C/svg%3E',
-                description: description,
-                lockerUrl: lockerUrl
-            };
-
-            if (category === 'freeDeals') {
-                freeDeals.push(newOffer);
-            } else if (category === 'apps') {
-                apps.push(newOffer);
-            } else if (category === 'games') {
-                games.push(newOffer);
-            }
-
-            // Clear form
-            document.getElementById('offer-title').value = '';
-            document.getElementById('offer-image').value = '';
-            document.getElementById('offer-description').value = '';
-            document.getElementById('offer-locker').value = '';
-
-            // Refresh displays
-            refreshAllGrids();
-            updateOfferList();
-            saveData();
-            alert('Offer added successfully!');
-        }
-
-        function deleteOffer(category, index) {
-            if (confirm('Are you sure you want to delete this offer?')) {
-                if (category === 'freeDeals') {
-                    freeDeals.splice(index, 1);
-                } else if (category === 'apps') {
-                    apps.splice(index, 1);
-                } else if (category === 'games') {
-                    games.splice(index, 1);
-                }
-                refreshAllGrids();
-                updateOfferList();
-                saveData();
-                alert('Offer deleted successfully!');
-            }
-        }
-
-        function updateOfferList() {
-            const offerList = document.getElementById('offer-list');
-            offerList.innerHTML = '';
-            
-            const allOffers = [
-                ...freeDeals.map((offer, index) => ({ ...offer, category: 'freeDeals', index })),
-                ...apps.map((offer, index) => ({ ...offer, category: 'apps', index })),
-                ...games.map((offer, index) => ({ ...offer, category: 'games', index }))
-            ];
-            
-            allOffers.forEach((offer) => {
-                const offerItem = document.createElement('div');
-                offerItem.className = 'offer-item';
-                offerItem.innerHTML = `
-                    <div>
-                        <strong>${offer.title}</strong><br>
-                        <small>${offer.category}</small>
-                    </div>
-                    <button class="delete-btn" onclick="deleteOffer('${offer.category}', ${offer.index})">Delete</button>
-                `;
-                offerList.appendChild(offerItem);
-            });
-        }
-
-        // Enhanced Data Management with GitHub API Integration
-        async function saveData() {
-            if (!isAdminAuthenticated) {
-                alert('❌ Admin access required!');
-                return;
-            }
-
-            try {
-                const data = {
-                    freeDeals: freeDeals,
-                    apps: apps,
-                    games: games,
-                    lastUpdated: new Date().toISOString()
-                };
-
-                // Try to save to GitHub API
-                await saveToGitHub(data);
-                console.log('Data saved to GitHub');
-            } catch (error) {
-                console.error('Failed to save to GitHub:', error);
-            }
-
-            // Always save to localStorage as backup
-            localStorage.setItem('gilerData', JSON.stringify(data));
-            alert('✅ Data saved successfully!');
-        }
-
-        async function loadData() {
-            try {
-                // First try to load from GitHub API
-                const githubData = await loadFromGitHub();
-                if (githubData) {
-                    freeDeals = githubData.freeDeals || DEFAULT_OFFERS.freeDeals;
-                    apps = githubData.apps || DEFAULT_OFFERS.apps;
-                    games = githubData.games || DEFAULT_OFFERS.games;
-                    console.log('Data loaded from GitHub');
-                } else {
-                    // Fallback to localStorage
-                    const localData = localStorage.getItem('gilerData');
-                    if (localData) {
-                        const data = JSON.parse(localData);
-                        freeDeals = data.freeDeals || DEFAULT_OFFERS.freeDeals;
-                        apps = data.apps || DEFAULT_OFFERS.apps;
-                        games = data.games || DEFAULT_OFFERS.games;
-                        console.log('Data loaded from localStorage');
-                    } else {
-                        // Final fallback to default offers
-                        freeDeals = [...DEFAULT_OFFERS.freeDeals];
-                        apps = [...DEFAULT_OFFERS.apps];
-                        games = [...DEFAULT_OFFERS.games];
-                        console.log('Using default offers');
-                    }
-                }
-
-                refreshAllGrids();
-                updateOfferList();
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                // Use default data if all else fails
-                freeDeals = [...DEFAULT_OFFERS.freeDeals];
-                apps = [...DEFAULT_OFFERS.apps];
-                games = [...DEFAULT_OFFERS.games];
-                refreshAllGrids();
-            }
-        }
-
-        // GitHub API Functions for Global Data Storage
-        async function loadFromGitHub() {
-            try {
-                const response = await fetch(`${REPO_BASE_URL}/data/offers.json`);
-                if (response.ok) {
-                    return await response.json();
-                }
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            } catch (error) {
-                console.error('Failed to load from GitHub:', error);
-                return null;
-            }
-        }
-
-        async function saveToGitHub(data) {
-            // For now, we'll just log the save attempt since
-            // In a real implementation, this would require GitHub tokens
-            console.log('Attempting to save to GitHub repository:', JSON.stringify(data, null, 2));
-            
-            // In a production environment, you would implement GitHub API calls here
-            // This would require authentication tokens and proper API integration
-            return Promise.resolve();
-        }
 
         // Card creation and rendering functions
         function createCard(offer) {
@@ -1212,7 +790,11 @@
         }
 
         // Event Listeners
-        logo.addEventListener('click', handleLogoClick);
+        logo.addEventListener('click', () => {
+            document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
+            navLinks.forEach(l => l.classList.remove('active'));
+            navLinks[0].classList.add('active');
+        });
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -1258,30 +840,12 @@
             }
         });
 
-        // Admin authentication via Enter key
-        document.getElementById('admin-username').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('admin-password').focus();
-            }
-        });
-
-        document.getElementById('admin-password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                authenticateAdmin();
-            }
-        });
-
         // Initialize the application
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Giler application starting...');
             
-            // Show loading state
-            freeDealsGrid.innerHTML = '<div class="loading-spinner">Loading offers...</div>';
-            appsGrid.innerHTML = '<div class="loading-spinner">Loading apps...</div>';
-            gamesGrid.innerHTML = '<div class="loading-spinner">Loading games...</div>';
-            
-            // Load data from GitHub API or fallback sources
-            await loadData();
+            // Load and display offers
+            refreshAllGrids();
             
             console.log('✅ Giler application loaded successfully!');
             console.log(`📊 Loaded: ${freeDeals.length} deals, ${apps.length} apps, ${games.length} games`);
